@@ -60,6 +60,15 @@ if (Meteor.isClient) {
 		}
 	})
 
+	Template.website_item.helpers({
+
+		date: function() {
+			var id = this._id;
+			var site = Websites.findOne({_id: id});
+			return (site.createdOn.getMonth() + 1) + "/" +  site.createdOn.getDay() + "/" + site.createdOn.getFullYear();
+		}
+	});
+
 	Template.website_form.events({
 		"click .js-toggle-website-form":function(event){
 			$("#website_form").toggle('slow');
