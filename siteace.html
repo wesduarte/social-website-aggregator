@@ -7,15 +7,22 @@
 	<nav class="navbar navbar-default">
 	  <div class="container-fluid">
 	    <div class="navbar-header">
-	      <a class="navbar-brand" href="#">
+	      <a class="navbar-brand nav-link" href="#">
 	        Site Ace
 	      </a>
 	    </div>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="navbar-text"><span class="glyphicon glyphicon-user"></span>
+          {{> loginButtons align="right"}}</li>
+      </ul>
 	  </div>
 	</nav>
 
 	<div class="container">
-		{{> website_form}}
+
+    {{#if currentUser}}
+		  {{> website_form}}
+    {{/if}}
 		{{> website_list}}
 	</div>
 </body>
