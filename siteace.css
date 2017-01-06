@@ -2,3 +2,29 @@
 .hidden_div{
 	display:none;
 }
+
+.navbar {
+	color: white;
+	/*background: #089de3;*/
+}
+
+.navbar-brand {
+	color: white;
+	font-size: 20px;
+}
+
+.nav-link {
+	color: a;
+}
+
+.js-upvote {
+	background: #449d44;
+}
+
+.js-downvote {
+	background: #c9302c;
+}
+
+.list-group-item {
+    display: list-item;
+}

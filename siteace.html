@@ -54,7 +54,7 @@
 
 <!-- template that displays several website items -->
 <template name="website_list">
-	<ol>
+	<ol class="list-group">
 	{{#each websites}}
 	{{>website_item}}
 	{{/each}}
@@ -63,7 +63,7 @@
 
 <!-- template that displays individual website entries -->
 <template name="website_item">
-<li>
+<li class="list-group-item">
 	<a href="{{url}}">{{title}}</a>
 	<p>
 		{{description}}
