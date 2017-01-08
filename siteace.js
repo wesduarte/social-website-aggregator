@@ -75,7 +75,7 @@ if (Meteor.isClient) {
 
 	Template.website_details.helpers({
 		comments:function(){
-			return Comments.find({website: this._id});
+			return Comments.find({website: this._id}, {sort: {createdOn: -1}});
 		}
 	});
 

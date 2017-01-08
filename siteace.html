@@ -41,7 +41,7 @@
 		<form class="js-save-website-form">
 		  <div class="form-group">
 		    <label for="url">Site address</label>
-		    <input type="text" class="form-control" id="url" placeholder="http://www.mysite.com">
+		    <input type="text" class="form-control" id="url" placeholder="http://www.mysite.com" required>
 		  </div>
 		  <div class="form-group">
 		    <label for="title">Title</label>
@@ -112,7 +112,7 @@
 
 <template name="comment_form">
   <form class="js-save-comment-form form-group">
-    <textarea class="form-control" id="comment" rows="3" cols="50"></textarea>
+    <textarea class="form-control" id="comment" rows="3" cols="50" required></textarea>
     <br />
     <button type="submit" class="btn btn-success">New comment</button>
   </form>
