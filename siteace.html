@@ -8,7 +8,7 @@
   	<nav class="navbar navbar-default">
   	  <div class="container-fluid">
   	    <div class="navbar-header">
-  	      <a class="navbar-brand nav-link" href="#">
+  	      <a class="navbar-brand nav-link" href="/">
   	        Site Ace
   	      </a>
   	    </div>
@@ -71,16 +71,15 @@
 <li class="list-group-item">
 	<a href="/details/{{_id}}">{{title}}</a>
   <br />
-  <p>  <span class="glyphicon glyphicon-calendar"></span>
-      {{date}}</p>
+  <p class="date">{{date}}</p>
 	<p>
 		{{description}}
 	</p>
-	<a href="#" class="btn btn-default js-upvote">
+	<a href="#" class="btn btn-success js-upvote">
     {{upvotes}}
 		<span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
 	</a>
-	<a href="#" class="btn btn-default js-downvote">
+	<a href="#" class="btn btn-danger js-downvote">
     {{downvotes}}
 		<span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
 	</a>
@@ -89,15 +88,15 @@
 </template>
 
 <template name="website_details">
-    <label for="title">Title: </label>
-  	<a id="title" href="{{url}}">{{title}}</a>
+  	<a id="title" href="{{url}}"><h1>{{title}}</h1></a>
     <br />
-    <p><span class="glyphicon glyphicon-calendar"></span>
-        {{date}}</p>
-    <label for="description">Description: </label>
+    <p class="date">{{date}}</p>
   	<p id="description">
   		{{description}}
   	</p>
+
+    <br />
+    <br />
     {{#if currentUser}}
       {{> comment_form}}
     {{/if}}
@@ -112,8 +111,8 @@
 </template>
 
 <template name="comment_form">
-  <form class="js-save-comment-form">
-    <textarea id="comment" rows="3" cols="50"></textarea>
+  <form class="js-save-comment-form form-group">
+    <textarea class="form-control" id="comment" rows="3" cols="50"></textarea>
     <br />
     <button type="submit" class="btn btn-success">New comment</button>
   </form>
@@ -123,7 +122,14 @@
 
 <template name="comment_item">
   <li class="list-group-item">
-    <p><b>{{get_user user}}</b></p>
-    <p>{{comment}}</p>
+    <div class="row">
+      <div class="col-sm-1">
+        <img src="/images/user-default.jpg" width="40" height="40" />
+      </div>
+      <div class="cols-sm-*">
+        <p class="username"><b>{{get_user user}}</b></p>
+        <p>{{comment}}</p>
+      </div>
+    </div>
   </li>
 </template>

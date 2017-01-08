@@ -6,6 +6,26 @@ Websites = new Mongo.Collection("websites");
 Comments = new Mongo.Collection("comments");
 Votes = new Mongo.Collection("votes");
 
+get_months = function(){
+  months = new Array(12);
+  months[0] = "January";
+  months[1] = "February";
+  months[2] = "March";
+  months[3] = "April";
+  months[4] = "May";
+  months[5] = "June";
+  months[6] = "July";
+  months[7] = "August";
+  months[8] = "September";
+  months[9] = "October";
+  months[10] = "November";
+  months[11] = "December";
+
+  return months;
+}
+
+months = get_months();
+
 if (Meteor.isClient) {
 
 	Router.route('/', {
@@ -89,6 +109,9 @@ if (Meteor.isClient) {
 			   } else {
 				    Votes.insert({website:website_id, user:user_id, vote_type:vote_type});
 			   }
+
+         $().button('toggle')
+
       }
 			// put the code in here to add a vote to a website!
 
@@ -112,6 +135,8 @@ if (Meteor.isClient) {
 			   } else {
 				    Votes.insert({website:website_id, user:user_id, vote_type:vote_type});
 			   }
+
+         $().button('toggle')
       }
 
 			// put the code in here to remove a vote from a website!
@@ -126,7 +151,15 @@ if (Meteor.isClient) {
 		if(!jQuery.isEmptyObject(this)){
 			var website_id = this._id;
 			var website = Websites.findOne({_id: website_id});
-			return (website.createdOn.getMonth() + 1) + "/" +  website.createdOn.getDay() + "/" + website.createdOn.getFullYear();
+      var month_index = website.createdOn.getMonth();
+      var month = months[month_index];
+      var day = website.createdOn.getUTCDate();
+      var year = website.createdOn.getFullYear();
+      var date = month + ", " + day + ", " + year;
+
+      console.log(months);
+
+			return date;
 		}
 	});
 

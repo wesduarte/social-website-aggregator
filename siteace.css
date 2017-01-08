@@ -5,27 +5,40 @@
 
 .navbar {
 	color: white;
-	/*background: #089de3;*/
+	background: #87CEEB;
 }
 
-.navbar-brand {
+.navbar-default .navbar-brand {
 	color: white;
-	font-size: 20px;
 }
 
-.nav-link {
-	color: a;
+#login-buttons a {
+	color: white;
+	text-decoration: none;
 }
 
 .js-upvote {
-	background: #449d44;
+
 }
 
 .js-downvote {
-	background: #c9302c;
+	
 }
 
 ol .list-group-item {
 		list-style: decimal inside;
     display: list-item;
+}
+
+.username {
+	color: #128ee9;
+}
+
+#description {
+	font-size: 20px;
+}
+
+.date {
+	color: #616161;
+	font-style: italic;
 }
