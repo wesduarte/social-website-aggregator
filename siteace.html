@@ -1,32 +1,37 @@
-<head>
-  <title>siteace</title>
-</head>
+<template name="main">
+  <head>
+    <title>siteace</title>
+  </head>
 
-<body>
-	<!-- navbar  - you will be putting the login functions here -->
-	<nav class="navbar navbar-default">
-	  <div class="container-fluid">
-	    <div class="navbar-header">
-	      <a class="navbar-brand nav-link" href="#">
-	        Site Ace
-	      </a>
-	    </div>
-      <ul class="nav navbar-nav navbar-right">
-        <li class="navbar-text"><span class="glyphicon glyphicon-user"></span>
-          {{> loginButtons align="right"}}</li>
-      </ul>
-	  </div>
-	</nav>
+  <body>
+  	<!-- navbar  - you will be putting the login functions here -->
+  	<nav class="navbar navbar-default">
+  	  <div class="container-fluid">
+  	    <div class="navbar-header">
+  	      <a class="navbar-brand nav-link" href="#">
+  	        Site Ace
+  	      </a>
+  	    </div>
+        <ul class="nav navbar-nav navbar-right">
+          <li class="navbar-text"><span class="glyphicon glyphicon-user"></span>
+            {{> loginButtons align="right"}}</li>
+        </ul>
+  	  </div>
+  	</nav>
 
-	<div class="container">
+  	<div class="container">
+      {{>yield}}
+  	</div>
+  </body>
 
-    {{#if currentUser}}
-		  {{> website_form}}
-    {{/if}}
-		{{> website_list}}
-	</div>
-</body>
+</template>
 
+<template name="website_list_page">
+  {{#if currentUser}}
+    {{> website_form}}
+  {{/if}}
+  {{> website_list}}
+</template>
 
 <template name="website_form">
 	<a class="btn btn-default js-toggle-website-form" href="#">
@@ -64,7 +69,7 @@
 <!-- template that displays individual website entries -->
 <template name="website_item">
 <li class="list-group-item">
-	<a href="{{url}}">{{title}}</a>
+	<a href="/details/{{_id}}">{{title}}</a>
   <br />
   <p>  <span class="glyphicon glyphicon-calendar"></span>
       {{date}}</p>
@@ -81,4 +86,17 @@
 	</a>
 	<!-- you will be putting your up and down vote buttons in here! -->
 </li>
+</template>
+
+<template name="website_details">
+    <label for="title">Title: </label>
+  	<a id="title" href="{{url}}">{{title}}</a>
+    <br />
+    <p><span class="glyphicon glyphicon-calendar"></span>
+        {{date}}</p>
+    <label for="description">Description: </label>
+  	<p id="description">
+  		{{description}}
+  	</p>
+  	<!-- you will be putting your up and down vote buttons in here! -->
 </template>

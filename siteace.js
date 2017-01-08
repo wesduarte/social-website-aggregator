@@ -1,6 +1,22 @@
+Router.configure({
+    layoutTemplate: 'main'
+});
+
 Websites = new Mongo.Collection("websites");
 
 if (Meteor.isClient) {
+
+	Router.route('/', {
+		template:'website_list_page'
+	});
+
+	Router.route('/details/:_id', {
+		template: 'website_details',
+		data: function() {
+				var website_id = this.params._id;
+				return Websites.findOne({_id: website_id});
+			}
+		});
 
 	Accounts.ui.config({
 	  requestPermissions: {
@@ -60,12 +76,13 @@ if (Meteor.isClient) {
 		}
 	})
 
-	Template.website_item.helpers({
+	Template.registerHelper('date', function(){
+		console.log(this);
 
-		date: function() {
-			var id = this._id;
-			var site = Websites.findOne({_id: id});
-			return (site.createdOn.getMonth() + 1) + "/" +  site.createdOn.getDay() + "/" + site.createdOn.getFullYear();
+		if(!jQuery.isEmptyObject(this)){
+			var website_id = this._id;
+			var website = Websites.findOne({_id: website_id});
+			return (website.createdOn.getMonth() + 1) + "/" +  website.createdOn.getDay() + "/" + website.createdOn.getFullYear();
 		}
 	});
 
