@@ -4,6 +4,7 @@ Router.configure({
 
 Websites = new Mongo.Collection("websites");
 Comments = new Mongo.Collection("comments");
+Votes = new Mongo.Collection("votes");
 
 if (Meteor.isClient) {
 
@@ -37,8 +38,19 @@ if (Meteor.isClient) {
 	// helper function that returns all available websites
 	Template.website_list.helpers({
 		websites:function(){
-			return Websites.find({},{sort: { upvotes: -1}});
+			return Websites.find({});
 		}
+	});
+
+	Template.website_item.helpers({
+		upvotes:function(){
+			console.log(Votes.find({website: this._id, vote_type: 1}).count());
+			return Votes.find({website: this._id, vote_type: 1}).count();
+		},
+		downvotes:function(){
+			return Votes.find({website: this._id, vote_type: 2}).count();
+		}
+
 	});
 
 	Template.website_details.helpers({
@@ -64,11 +76,17 @@ if (Meteor.isClient) {
 			// example of how you can access the id for the website in the database
 			// (this is the data context for the template)
 			var website_id = this._id;
+			var user_id = Meteor.userId();
+			var vote_type = 1;
 			console.log("Up voting website with id "+website_id);
 
-			Websites.update(website_id,
-				{$inc: {upvotes: 1}}
-			);
+			var vote = Votes.findOne({website: website_id, user: user_id});
+
+			if(vote){
+				Votes.update(vote._id, {website:website_id, user:user_id, vote_type:vote_type});
+			} else {
+				Votes.insert({website:website_id, user:user_id, vote_type:vote_type});
+			}
 			// put the code in here to add a vote to a website!
 
 			return false;// prevent the button from reloading the page
@@ -78,11 +96,17 @@ if (Meteor.isClient) {
 			// example of how you can access the id for the website in the database
 			// (this is the data context for the template)
 			var website_id = this._id;
+			var user_id = Meteor.userId();
+			var vote_type = 0;
 			console.log("Down voting website with id "+website_id);
 
-			Websites.update(website_id,
-				{$inc: {downvotes: 1}}
-			);
+			var vote = Votes.findOne({website: website_id, user: user_id});
+
+			if(vote){
+				Votes.update({_id: vote._id}, { website:website_id, user:user_id, vote_type:vote_type});
+			} else {
+				Votes.insert({website:website_id, user:user_id, vote_type:vote_type});
+			}
 
 			// put the code in here to remove a vote from a website!
 
@@ -121,8 +145,6 @@ if (Meteor.isClient) {
 			 url:url,
 			 description:description,
 			 createdOn:new Date(),
-			 upvotes: 0,
-			 downvotes: 0,
 		 });
 
 		 	template.find("form").reset();
@@ -138,8 +160,6 @@ if (Meteor.isClient) {
 			event.preventDefault();
 			// here is an example of how to get the url out of the form:
 			var target = event.target;
-			console.log(target);
-			console.log(this);
 			var website = this._id;
 			var user = Meteor.userId();
 			var comment = target.comment.value;
@@ -177,32 +197,28 @@ if (Meteor.isServer) {
     		url:"http://www.gold.ac.uk/computing/",
     		description:"This is where this course was developed.",
     		createdOn:new Date(),
-				upvotes: 0,
-				downvotes: 0,
+
     	});
     	 Websites.insert({
     		title:"University of London",
     		url:"http://www.londoninternational.ac.uk/courses/undergraduate/goldsmiths/bsc-creative-computing-bsc-diploma-work-entry-route",
     		description:"University of London International Programme.",
     		createdOn:new Date(),
-				upvotes: 0,
-				downvotes: 0,
+
     	});
     	 Websites.insert({
     		title:"Coursera",
     		url:"http://www.coursera.org",
     		description:"Universal access to the world’s best education.",
     		createdOn:new Date(),
-				upvotes: 0,
-				downvotes: 0,
+
     	});
     	Websites.insert({
     		title:"Google",
     		url:"http://www.google.com",
     		description:"Popular search engine.",
     		createdOn:new Date(),
-				upvotes: 0,
-				downvotes: 0,
+
     	});
     }
   });
