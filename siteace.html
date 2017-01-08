@@ -98,5 +98,33 @@
   	<p id="description">
   		{{description}}
   	</p>
+    {{#if currentUser}}
+      {{> comment_form}}
+    {{/if}}
+    <br />
+
+    <ul class="list-group">
+    {{#each comments}}
+  	 {{>comment_item}}
+  	{{/each}}
+    </ul>
   	<!-- you will be putting your up and down vote buttons in here! -->
+</template>
+
+<template name="comment_form">
+  <form class="js-save-comment-form">
+    <textarea id="comment" rows="3" cols="50"></textarea>
+    <br />
+    <button type="submit" class="btn btn-success">New comment</button>
+  </form>
+
+
+</template>
+
+<template name="comment_item">
+  <li class="list-group-item">
+    <p><b>{{get_user user}}</b></p>
+    <p>{{date}}</p>
+    <p>{{comment}}</p>
+  </li>
 </template>

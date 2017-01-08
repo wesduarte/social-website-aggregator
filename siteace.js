@@ -3,6 +3,7 @@ Router.configure({
 });
 
 Websites = new Mongo.Collection("websites");
+Comments = new Mongo.Collection("comments");
 
 if (Meteor.isClient) {
 
@@ -37,6 +38,19 @@ if (Meteor.isClient) {
 	Template.website_list.helpers({
 		websites:function(){
 			return Websites.find({},{sort: { upvotes: -1}});
+		}
+	});
+
+	Template.website_details.helpers({
+		comments:function(){
+			return Comments.find({website: this._id});
+		}
+	});
+
+	Template.comment_item.helpers({
+		get_user:function(user_id){
+			var user = Meteor.users.findOne({_id: user_id});
+			return user.username;
 		}
 	});
 
@@ -77,7 +91,7 @@ if (Meteor.isClient) {
 	})
 
 	Template.registerHelper('date', function(){
-		console.log(this);
+		//console.log(this);
 
 		if(!jQuery.isEmptyObject(this)){
 			var website_id = this._id;
@@ -115,6 +129,38 @@ if (Meteor.isClient) {
 
 		}
 	});
+
+	Template.comment_form.events({
+		"click .js-toggle-comment-form":function(event){
+			$("#comment_form").toggle('slow');
+		},
+		"submit .js-save-comment-form":function(event){
+			event.preventDefault();
+			// here is an example of how to get the url out of the form:
+			var target = event.target;
+			console.log(target);
+			console.log(this);
+			var website = this._id;
+			var user = Meteor.userId();
+			var comment = target.comment.value;
+
+
+			console.log("The comment they entered is: "+comment);
+
+			//  put your website saving code in here!
+
+			Comments.insert({
+			 comment: comment,
+			 createdOn:new Date(),
+			 user: user,
+			 website: website,
+		 });
+
+			return false;// stop the form submit from reloading the page
+
+		}
+	});
+
 }
 
 
