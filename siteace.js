@@ -149,12 +149,21 @@ if (Meteor.isClient) {
 		//console.log(this);
 
 		if(!jQuery.isEmptyObject(this)){
-			var website_id = this._id;
-			var website = Websites.findOne({_id: website_id});
-      var month_index = website.createdOn.getMonth();
+      console.log(this);
+			var obj_id = this._id;
+
+
+
+      if(typeof this.url == "undefined")
+			   var obj = Comments.findOne({_id: obj_id});
+      else {
+         var obj = Websites.findOne({_id: obj_id});
+      }
+
+      var month_index = obj.createdOn.getMonth();
       var month = months[month_index];
-      var day = website.createdOn.getUTCDate();
-      var year = website.createdOn.getFullYear();
+      var day = obj.createdOn.getUTCDate();
+      var year = obj.createdOn.getFullYear();
       var date = month + ", " + day + ", " + year;
 
       console.log(months);

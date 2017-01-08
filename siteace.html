@@ -91,7 +91,7 @@
   	<a id="title" href="{{url}}"><h1>{{title}}</h1></a>
     <br />
     <p class="date">{{date}}</p>
-  	<p id="description">
+  	<p class="detail-description">
   		{{description}}
   	</p>
 
@@ -127,7 +127,11 @@
         <img src="/images/user-default.jpg" width="40" height="40" />
       </div>
       <div class="cols-sm-*">
-        <p class="username"><b>{{get_user user}}</b></p>
+        <ul class="list-inline">
+
+        <li><p class="username" style="display:inline-block"><b>{{get_user user}}</b></p></li>
+        <li><p class="date-small">{{date}}</p></li>
+        </ul>
         <p>{{comment}}</p>
       </div>
     </div>

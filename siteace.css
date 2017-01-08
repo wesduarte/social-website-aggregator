@@ -22,7 +22,7 @@
 }
 
 .js-downvote {
-	
+
 }
 
 ol .list-group-item {
@@ -34,11 +34,17 @@ ol .list-group-item {
 	color: #128ee9;
 }
 
-#description {
+.detail-description {
 	font-size: 20px;
 }
 
 .date {
 	color: #616161;
+	font-style: italic;
+}
+
+.date-small {
+	color: #616161;
+	font-size: 10px;
 	font-style: italic;
 }
