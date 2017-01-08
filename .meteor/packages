@@ -24,3 +24,4 @@ shell-server
 accounts-ui
 accounts-password
 iron:router
+http
