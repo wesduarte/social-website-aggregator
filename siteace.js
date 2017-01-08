@@ -75,18 +75,21 @@ if (Meteor.isClient) {
 		"click .js-upvote":function(event){
 			// example of how you can access the id for the website in the database
 			// (this is the data context for the template)
-			var website_id = this._id;
-			var user_id = Meteor.userId();
-			var vote_type = 1;
-			console.log("Up voting website with id "+website_id);
 
-			var vote = Votes.findOne({website: website_id, user: user_id});
+      if(Meteor.user()){
+			   var website_id = this._id;
+			   var user_id = Meteor.userId();
+			   var vote_type = 1;
+			   console.log("Up voting website with id "+website_id);
 
-			if(vote){
-				Votes.update(vote._id, {website:website_id, user:user_id, vote_type:vote_type});
-			} else {
-				Votes.insert({website:website_id, user:user_id, vote_type:vote_type});
-			}
+			   var vote = Votes.findOne({website: website_id, user: user_id});
+
+			   if(vote){
+				    Votes.update(vote._id, {website:website_id, user:user_id, vote_type:vote_type});
+			   } else {
+				    Votes.insert({website:website_id, user:user_id, vote_type:vote_type});
+			   }
+      }
 			// put the code in here to add a vote to a website!
 
 			return false;// prevent the button from reloading the page
@@ -95,18 +98,21 @@ if (Meteor.isClient) {
 
 			// example of how you can access the id for the website in the database
 			// (this is the data context for the template)
-			var website_id = this._id;
-			var user_id = Meteor.userId();
-			var vote_type = 0;
-			console.log("Down voting website with id "+website_id);
 
-			var vote = Votes.findOne({website: website_id, user: user_id});
+      if(Meteor.user()){
+			   var website_id = this._id;
+			   var user_id = Meteor.userId();
+			   var vote_type = 2;
+			   console.log("Down voting website with id "+website_id);
 
-			if(vote){
-				Votes.update({_id: vote._id}, { website:website_id, user:user_id, vote_type:vote_type});
-			} else {
-				Votes.insert({website:website_id, user:user_id, vote_type:vote_type});
-			}
+			   var vote = Votes.findOne({website: website_id, user: user_id});
+
+			   if(vote){
+				    Votes.update({_id: vote._id}, { website:website_id, user:user_id, vote_type:vote_type});
+			   } else {
+				    Votes.insert({website:website_id, user:user_id, vote_type:vote_type});
+			   }
+      }
 
 			// put the code in here to remove a vote from a website!
 
