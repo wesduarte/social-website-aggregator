@@ -104,7 +104,7 @@ if (Meteor.isClient) {
 		"click .js-toggle-website-form":function(event){
 			$("#website_form").toggle('slow');
 		},
-		"submit .js-save-website-form":function(event){
+		"submit .js-save-website-form":function(event, template){
 			event.preventDefault();
 			// here is an example of how to get the url out of the form:
 			var target = event.target;
@@ -125,16 +125,16 @@ if (Meteor.isClient) {
 			 downvotes: 0,
 		 });
 
+		 	template.find("form").reset();
+			$("#website_form").toggle('slow');
+
 			return false;// stop the form submit from reloading the page
 
 		}
 	});
 
 	Template.comment_form.events({
-		"click .js-toggle-comment-form":function(event){
-			$("#comment_form").toggle('slow');
-		},
-		"submit .js-save-comment-form":function(event){
+		"submit .js-save-comment-form":function(event, template){
 			event.preventDefault();
 			// here is an example of how to get the url out of the form:
 			var target = event.target;
@@ -155,6 +155,8 @@ if (Meteor.isClient) {
 			 user: user,
 			 website: website,
 		 });
+
+		 	template.find("form").reset();
 
 			return false;// stop the form submit from reloading the page
 
