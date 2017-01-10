@@ -162,6 +162,7 @@ if (Meteor.isClient) {
 			let target = event.target;
 			console.log("My target: "+target);
 			let url = target.url.value;
+      url = url.replace(/http:\/\/|https:\/\//gi, "");
 			let title = target.title.value;
 			let description = target.description.value;
 			console.log("The url they entered is: "+url);
