@@ -12,6 +12,10 @@
 	color: white;
 }
 
+.accounts-dialog {
+	background: #87CEEB; 
+}
+
 #login-buttons a {
 	color: white;
 	text-decoration: none;
