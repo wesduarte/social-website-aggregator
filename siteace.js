@@ -53,19 +53,8 @@ if (Meteor.isClient) {
 
 	Template.website_list.helpers({
 		websites:function(){
-			return Websites.find({});
+			return Websites.find({}, {sort: {upvotes : -1, downvotes:1}});
 		}
-	});
-
-	Template.website_item.helpers({
-		upvotes:function(){
-			console.log(Votes.find({website: this._id, vote_type: 1}).count());
-			return Votes.find({website: this._id, vote_type: 1}).count();
-		},
-		downvotes:function(){
-			return Votes.find({website: this._id, vote_type: 2}).count();
-		}
-
 	});
 
 	Template.website_details.helpers({
@@ -98,6 +87,12 @@ if (Meteor.isClient) {
 				    Votes.insert({website:website_id, user:user_id, vote_type:vote_type});
 			   }
 
+         upvotes = Votes.find({website: this._id, vote_type: 1}).count()
+         downvotes = Votes.find({website: this._id, vote_type: 2}).count()
+         Websites.update(website_id,{
+           $set: {upvotes: upvotes, downvotes: downvotes}
+         });
+
          $().button('toggle')
 
       }
@@ -119,6 +114,12 @@ if (Meteor.isClient) {
 			   } else {
 				    Votes.insert({website:website_id, user:user_id, vote_type:vote_type});
 			   }
+
+         upvotes = Votes.find({website: this._id, vote_type: 1}).count()
+         downvotes = Votes.find({website: this._id, vote_type: 2}).count()
+         Websites.update(website_id,{
+           $set: {upvotes: upvotes, downvotes: downvotes}
+         });
 
          $().button('toggle')
       }
@@ -178,6 +179,8 @@ if (Meteor.isClient) {
         			    url:url,
                   description:description,
         			    createdOn:new Date(),
+                  upvotes:0,
+                  downvotes: 0,
         		    });
 
                 template.find("form").reset();
@@ -196,6 +199,8 @@ if (Meteor.isClient) {
 			    url:url,
 			    description:description,
 			    createdOn:new Date(),
+          upvotes:0,
+          downvotes: 0,
 		   });
 
 		 	  template.find("form").reset();
@@ -242,6 +247,8 @@ if (Meteor.isServer) {
     		url:"http://www.gold.ac.uk/computing/",
     		description:"This is where this course was developed.",
     		createdOn:new Date(),
+        upvotes:0,
+        downvotes: 0,
 
     	});
     	 Websites.insert({
@@ -249,6 +256,8 @@ if (Meteor.isServer) {
     		url:"http://www.londoninternational.ac.uk/courses/undergraduate/goldsmiths/bsc-creative-computing-bsc-diploma-work-entry-route",
     		description:"University of London International Programme.",
     		createdOn:new Date(),
+        upvotes:0,
+        downvotes: 0,
 
     	});
     	 Websites.insert({
@@ -256,6 +265,8 @@ if (Meteor.isServer) {
     		url:"http://www.coursera.org",
     		description:"Universal access to the world’s best education.",
     		createdOn:new Date(),
+        upvotes:0,
+        downvotes: 0,
 
     	});
     	Websites.insert({
@@ -263,6 +274,8 @@ if (Meteor.isServer) {
     		url:"http://www.google.com",
     		description:"Popular search engine.",
     		createdOn:new Date(),
+        upvotes:0,
+        downvotes: 0,
 
     	});
     }
