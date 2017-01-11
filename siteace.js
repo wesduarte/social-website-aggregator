@@ -130,11 +130,7 @@ if (Meteor.isClient) {
 	Template.registerHelper('date', function(){
 
 		if(!jQuery.isEmptyObject(this)){
-      console.log(this);
 			let obj_id = this._id;
-
-
-
       if(typeof this.url == "undefined")
 			   var obj = Comments.findOne({_id: obj_id});
       else {
@@ -147,39 +143,67 @@ if (Meteor.isClient) {
       let year = obj.createdOn.getFullYear();
       let date = month + ", " + day + ", " + year;
 
-      console.log(months);
-
 			return date;
 		}
 	});
 
 	Template.website_form.events({
 		"click .js-toggle-website-form":function(event){
-			$("#website_form").toggle('slow');
+			$("#website_url_form").toggle('slow');
 		},
 		"submit .js-save-website-form":function(event, template){
 			event.preventDefault();
 			let target = event.target;
-			console.log("My target: "+target);
 			let url = target.url.value;
-      url = url.replace(/http:\/\/|https:\/\//gi, "");
 			let title = target.title.value;
 			let description = target.description.value;
 			console.log("The url they entered is: "+url);
 
-			Websites.insert({
-			 title:title,
-			 url:url,
-			 description:description,
-			 createdOn:new Date(),
-		 });
 
-		 	template.find("form").reset();
-			$("#website_form").toggle('slow');
+      if( title == "" || description == ""){
+          if(!url.match(/^[a-zA-Z]+:\/\//))
+            url = 'http://' + url;
 
-			return false;
+          Meteor.call('get_url_info', url, function(error, response){
+            if(error)
+              $("#website_form").toggle('slow');
+            else{
+              url = url.replace(/http:\/\/|https:\/\//gi, "");
+              let title = response.title;
+              let description = response.description;
+              if(response.title != "" && response.description != ""){
 
+                Websites.insert({
+        			    title:title,
+        			    url:url,
+                  description:description,
+        			    createdOn:new Date(),
+        		    });
+
+                template.find("form").reset();
+       			      $("#website_url_form").toggle('slow');
+
+              } else {
+                $("#website_form").toggle('slow');
+              }
+          }
+          return false;
+        });
+      } else{
+
+			 Websites.insert({
+			    title:title,
+			    url:url,
+			    description:description,
+			    createdOn:new Date(),
+		   });
+
+		 	  template.find("form").reset();
+			  $("#website_form").toggle('slow');
+        }
+			   return false;
 		}
+
 	});
 
 	Template.comment_form.events({
@@ -208,7 +232,6 @@ if (Meteor.isClient) {
 	});
 
 }
-
 
 if (Meteor.isServer) {
   Meteor.startup(function () {
@@ -242,6 +265,29 @@ if (Meteor.isServer) {
     		createdOn:new Date(),
 
     	});
+    }
+  });
+
+  Meteor.methods({
+    'get_url_info':function(url){
+      this.unblock();
+
+      let content = HTTP.get(url).content;
+      let title = "";
+      let description = "";
+
+      let titleRegExp = /<title.*?>([\w\W]+)<\/title>/g
+      let descriptionRegExp = /<meta.+?name="description".+?content="(.+?)"/g;
+      let title_matchs = titleRegExp.exec(content);
+      let description_matchs = descriptionRegExp.exec(content);
+
+      if(title_matchs)
+        title = title_matchs[1];
+      if(description_matchs)
+        description = description_matchs[1];
+
+      return {title: title, description: description};
+
     }
   });
 
