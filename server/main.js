@@ -44,6 +44,18 @@ Meteor.startup(function () {
     }
   });
 
+Meteor.publish("websites", function(){
+  return Websites.find({});
+});
+
+Meteor.publish("comments", function(){
+  return Comments.find({});
+});
+
+Meteor.publish("votes", function(){
+  return Votes.find({});
+});
+
   Meteor.methods({
     'get_url_info':function(url){
       this.unblock();

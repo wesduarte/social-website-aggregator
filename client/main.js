@@ -29,6 +29,10 @@ Router.configure({
 	  passwordSignupFields: 'USERNAME_AND_OPTIONAL_EMAIL'
 	});
 
+  Meteor.subscribe("websites");
+  Meteor.subscribe("comments");
+  Meteor.subscribe("votes");
+
 	Template.website_list.helpers({
 		websites:function(){
 			return Websites.find({}, {sort: {upvotes : -1, downvotes:1}});
