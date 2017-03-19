@@ -124,33 +124,31 @@ Template.website_form.events({
 		 console.log("The url they entered is: "+url);
 
      if( title == "" || description == ""){
-       if(!url.match(/^[a-zA-Z]+:\/\//))
-         url = 'http://' + url;
-         Meteor.call('get_url_info', url, function(error, response){
-        if(error)
-          $("#website_form").toggle('slow');
-        else{
-          url = url.replace(/http:\/\/|https:\/\//gi, "");
-          let title = response.title;
-          let description = response.description;
-          if(response.title != "" && response.description != ""){
-            Websites.insert({
-        	     title:title,
-        	     url:url,
-               description:description,
-        			 createdOn:new Date(),
-               upvotes:0,
-               downvotes: 0,
-        		});
+       Meteor.call('get_url_info', url, function(error, response){
+       if(error)
+         $("#website_form").toggle('slow');
+       else{
+         url = url.replace(/http:\/\/|https:\/\//gi, "");
+         let title = response.title;
+         let description = response.description;
+         if(response.title != "" && response.description != ""){
+           Websites.insert({
+        	    title:title,
+        	    url:url,
+              description:description,
+        			createdOn:new Date(),
+              upvotes:0,
+              downvotes: 0,
+        	});
 
-            template.find("form").reset();
-       			$("#website_url_form").toggle('slow');
-           } else {
-             $("#website_form").toggle('slow');
-           }
-         }
-          return false;
-      });
+          template.find("form").reset();
+       		$("#website_url_form").toggle('slow');
+          } else {
+            $("#website_form").toggle('slow');
+          }
+      }
+        return false;
+     });
     } else{
 	     Websites.insert({
 			    title:title,
@@ -166,7 +164,7 @@ Template.website_form.events({
         }
 			   return false;
 		}
-	});
+});
 
 Template.comment_form.events({
   "submit .js-save-comment-form":function(event, template){
