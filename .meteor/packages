@@ -20,7 +20,8 @@ twbs:bootstrap
 standard-minifier-css
 standard-minifier-js
 shell-server
-accounts-ui
-accounts-password
 iron:router
 http
+stylus
+accounts-password
+ian:accounts-ui-bootstrap-3
