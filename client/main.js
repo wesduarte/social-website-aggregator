@@ -50,17 +50,18 @@ Template.website_item.events({
 			console.log("Up voting website with id "+website_id);
 			let vote = Votes.findOne({website: website_id, user: user_id});
 
+      new_vote = {website:website_id, user:user_id, vote_type:vote_type};
+
 			if(vote){
-				Votes.update(vote._id, {website:website_id, user:user_id, vote_type:vote_type});
+				Meteor.call('updateVote', vote._id, new_vote);
 			} else {
-				Votes.insert({website:website_id, user:user_id, vote_type:vote_type});
+				Meteor.call('addVote', new_vote);
 			}
 
-      upvotes = Votes.find({website: this._id, vote_type: 1}).count()
-      downvotes = Votes.find({website: this._id, vote_type: 2}).count()
-      Websites.update(website_id,{
-        $set: {upvotes: upvotes, downvotes: downvotes}
-      });
+      upvotes = Votes.find({website: website_id, vote_type: 1}).count()
+      downvotes = Votes.find({website: website_id, vote_type: 2}).count()
+      all_votes = {upvotes: upvotes, downvotes: downvotes};
+      Meteor.call('updateWebsite', website_id, all_votes);
 
       $().button('toggle')
       }
@@ -74,17 +75,19 @@ Template.website_item.events({
 			console.log("Down voting website with id "+website_id);
 			var vote = Votes.findOne({website: website_id, user: user_id});
 
+      new_vote = { website:website_id, user:user_id, vote_type:vote_type};
+
 			if(vote){
-		    Votes.update({_id: vote._id}, { website:website_id, user:user_id, vote_type:vote_type});
+		    Meteor.call('updateVote', vote._id, new_vote);
 		  } else {
-		    Votes.insert({website:website_id, user:user_id, vote_type:vote_type});
+		    Meteor.call('addVote', new_vote);
 	    }
 
       upvotes = Votes.find({website: this._id, vote_type: 1}).count()
       downvotes = Votes.find({website: this._id, vote_type: 2}).count()
-      Websites.update(website_id,{
-        $set: {upvotes: upvotes, downvotes: downvotes}
-      });
+
+      all_votes = {upvotes: upvotes, downvotes: downvotes};
+      Meteor.call('updateWebsite', website_id, all_votes);
 
       $().button('toggle')
       }
@@ -101,13 +104,7 @@ Template.registerHelper('date', function(){
        var obj = Websites.findOne({_id: obj_id});
      }
 
-     let month_index = obj.createdOn.getMonth();
-     let month = get_months()[month_index];
-     let day = obj.createdOn.getUTCDate();
-     let year = obj.createdOn.getFullYear();
-     let date = month + ", " + day + ", " + year;
-
-		 return date;
+		 return beautifyDate(obj.createdOn);
 	}
 });
 
@@ -123,6 +120,15 @@ Template.website_form.events({
 		 let description = target.description.value;
 		 console.log("The url they entered is: "+url);
 
+     website = {
+       title:title,
+       url:url,
+       description:description,
+       createdOn:new Date(),
+       upvotes:0,
+       downvotes: 0,
+     };
+
      if( title == "" || description == ""){
        Meteor.call('get_url_info', url, function(error, response){
        if(error)
@@ -132,14 +138,7 @@ Template.website_form.events({
          let title = response.title;
          let description = response.description;
          if(response.title != "" && response.description != ""){
-           Websites.insert({
-        	    title:title,
-        	    url:url,
-              description:description,
-        			createdOn:new Date(),
-              upvotes:0,
-              downvotes: 0,
-        	});
+           Meteor.call('addWebsite', website);
 
           template.find("form").reset();
        		$("#website_url_form").toggle('slow');
@@ -150,19 +149,11 @@ Template.website_form.events({
         return false;
      });
     } else{
-	     Websites.insert({
-			    title:title,
-			    url:url,
-			    description:description,
-			    createdOn:new Date(),
-          upvotes:0,
-          downvotes: 0,
-		   });
-
-		 	  template.find("form").reset();
-			  $("#website_form").toggle('slow');
-        }
-			   return false;
+	     Meteor.call('addWebsite', website);
+		 	 template.find("form").reset();
+			 $("#website_form").toggle('slow');
+      }
+		 return false;
 		}
 });
 
@@ -175,17 +166,27 @@ Template.comment_form.events({
 		 let comment = target.comment.value;
 
 		 console.log("The comment they entered is: "+comment);
-
-		 Comments.insert({
+     comment = {
 			 comment: comment,
 			 createdOn:new Date(),
 			 user: user,
 			 website: website,
-		 });
+		 };
+		 Meteor.call("addComment", comment);
 		 template.find("form").reset();
 		 return false;
 	}
 });
+
+function beautifyDate(date){
+  let month_index = date.getMonth();
+  let month = get_months()[month_index];
+  let day = date.getUTCDate();
+  let year = date.getFullYear();
+  let beautifulDate = month + ", " + day + ", " + year;
+
+  return beautifulDate;
+}
 
 function get_months(){
   months = new Array(12);

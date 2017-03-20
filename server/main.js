@@ -51,24 +51,3 @@ Meteor.publish("comments", function(){
 Meteor.publish("votes", function(){
   return Votes.find({});
 });
-
-Meteor.methods({
-  'get_url_info':function(url){
-    this.unblock();
-
-    let content = HTTP.get(url).content;
-    let title = "";
-    let description = "";
-    let titleRegExp = /<title.*?>([\w\W]+)<\/title>/g;
-    let descriptionRegExp = /<meta.+?name="description".+?content="(.+?)"/g;
-    let title_matchs = titleRegExp.exec(content);
-    let description_matchs = descriptionRegExp.exec(content);
-
-    if(title_matchs)
-      title = title_matchs[1];
-    if(description_matchs)
-      description = description_matchs[1];
-
-    return {title: title, description: description};
-  }
-});
